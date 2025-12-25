@@ -1,0 +1,60 @@
+server:
+  port: 8000
+spring:
+  zipkin:
+    sender:
+      type: web
+  application:
+    name: gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI}
+      client:
+        registration:
+          gateway:
+            provider: keycloack
+            client-id: gateway
+            client-secret: 33zDXKgvosS93VY1v5WwzT7lYDUisMIE
+            authorization-grant-type: authorization_code
+            redirect-uri: ${REDIRECT_URI}
+            scope:
+              - openid
+        provider:
+          keycloack:
+            issuer-uri: ${JWT_ISSUER_URI}
+  cloud:
+    gateway:
+      server:
+        webFlux:
+          default-filters:
+            - TokenRelay
+            - SaveSession
+            - StripPrefix=1
+          routes:
+            - id: hotels-service
+              uri: lb://hotels
+              predicates:
+                - Path=/hotels-service/api/**
+            - id: booking-service
+              uri: lb://booking
+              predicates:
+                - Path=/booking-service/api/**
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DISCOVERY_URI}
+management:
+  tracing:
+    sampling:
+      probability: 1
+  zipkin:
+    tracing:
+      endpoint: ${TRACE_ENDPOINT_URI}
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info

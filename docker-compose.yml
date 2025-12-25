@@ -1,0 +1,101 @@
+services:
+  db:
+    build: ./db
+    env_file:
+      - .env
+    volumes:
+      - .booker_db:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 3s
+      retries: 100
+      start_period: 5s
+      timeout: 3s
+
+  tracer:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+  auth:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      KC_HEALTH_ENABLED: true
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/auth
+      KC_DB_USERNAME: ${DB_USER}
+      KC_DB_PASSWORD: ${DB_PASSWORD}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_USER}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+    command: ["start-dev"]
+    healthcheck:
+      test: ['CMD-SHELL', "{ printf 'HEAD /health/ready HTTP/1.0\r\n\r\n' >&0; grep 'HTTP/1.0 200'; } 0<>/dev/tcp/localhost/9000"]
+      interval: 5s
+      timeout: 2s
+      start_period: 10s
+      retries: 100
+    ports:
+      - 8080:8080
+    depends_on:
+      db: 
+        condition: service_healthy
+
+  discovery:
+    build: ./discovery
+    env_file:
+      - .env
+    ports:
+      - "8008:8008"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8008/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 100
+      start_period: 20s
+
+  gateway:
+    build: ./gateway
+    depends_on:
+      discovery:
+        condition: service_healthy
+        restart: true
+      auth: 
+        condition: service_healthy
+        restart: true
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+
+  bookings:
+    build: ./booking
+    depends_on:
+      db: 
+        condition: service_healthy
+      discovery:
+        condition: service_healthy
+      auth: 
+        condition: service_healthy
+    env_file:
+      - .env
+    ports:
+      - "8083:8083"
+
+  hotels:
+    build: ./hotels
+    depends_on:
+      db: 
+        condition: service_healthy
+      discovery:
+        condition: service_healthy
+      auth: 
+        condition: service_healthy
+    env_file:
+      - .env
+    ports:
+      - "8082:8082"
+
+volumes:
+  dbdata:
+    external: true

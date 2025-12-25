@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: discovery
+  zipkin:
+    base-url: http://localhost:8009/
+server:
+  port: 8008
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
