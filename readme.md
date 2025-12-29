@@ -8,8 +8,8 @@
 - __gateway__ - Гейтвей и точка входа в микросервисы 
 - __discovery__ - Сервис обнаружения сервисов ([http://localhost:8008](http://localhost:8008/)/)
 - __tracer__ - Сервис трассировки запросов ([http://localhost:9411](http://localhost:9411/)/)
-- __booking__ -  API для бронирования комнат (([http://localhost:8083](http://localhost:8083/)/))
-- __hotels__ - API для работы с отелями (([http://localhost:808](http://localhost:8082/)/))
+- __booking__ -  API для бронирования комнат ([http://localhost:8083](http://localhost:8083/)/)
+- __hotels__ - API для работы с отелями ([http://localhost:808](http://localhost:8082/)/)
 
 ## Установка и запуск
 
