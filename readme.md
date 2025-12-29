@@ -109,8 +109,8 @@ curl -X DELETE -H "Content-type: application/json" -H "Authorization: Bearer $to
 
 По прямым адресам сервисов доступна Swagger документация 
 
-> [http://localhost:8082/swagger-ui/index.html](http://localhost:8082/swagger-ui/index.html)
-> [http://localhost:8083/swagger-ui/index.html](http://localhost:8083/swagger-ui/index.html)
+- __hotels__ [http://localhost:8082/swagger-ui/index.html](http://localhost:8082/swagger-ui/index.html)
+- __booking__ [http://localhost:8083/swagger-ui/index.html](http://localhost:8083/swagger-ui/index.html)
 
 ## Трассировка
 
