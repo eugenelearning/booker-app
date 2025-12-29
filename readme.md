@@ -5,11 +5,11 @@
 
 - __bd__ - Персистентное хранилище на Postgres
 - __auth__ - KeyCloak сервис авторизации
-- __gateway__ - Гейтвей и точка входа в микросервисы
-- __discovery__ - Сервис обнаружения сервисов
-- __tracer__ - Сервис трассировки запросов
-- __booking__ -  API для бронирования комнат 
-- __hotels__ - API для работы с отелями
+- __gateway__ - Гейтвей и точка входа в микросервисы 
+- __discovery__ - Сервис обнаружения сервисов ([http://localhost:8008](http://localhost:8008/)/)
+- __tracer__ - Сервис трассировки запросов ([http://localhost:9411](http://localhost:9411/)/)
+- __booking__ -  API для бронирования комнат (([http://localhost:8083](http://localhost:8083/)/))
+- __hotels__ - API для работы с отелями (([http://localhost:808](http://localhost:8082/)/))
 
 ## Установка и запуск
 
@@ -105,3 +105,15 @@ http://localhost:8000/hotels-service/api/hotels/82540a6f-acb0-4169-9b32-75af54e0
 ```
 curl -X DELETE -H "Content-type: application/json" -H "Authorization: Bearer $token" -i http://localhost:8000/hotels-service/api/hotels/ee345d30-e3e4-41e3-b204-460d52da7c8c/rooms/8804ef71-0e4e-4d18-90e0-aa0b0b99705b
 ```
+## Документация
+
+По прямым адресам сервисов доступна Swagger документация 
+
+> [http://localhost:8082/swagger-ui/index.html](http://localhost:8082/swagger-ui/index.html)
+> [http://localhost:8083/swagger-ui/index.html](http://localhost:8083/swagger-ui/index.html)
+
+## Трассировка
+
+Zipkin сервис для трассировки запрос доступе по прямому url
+
+> [http://localhost:8082/swagger-ui/index.html](http://localhost:9411/zipkin/)
